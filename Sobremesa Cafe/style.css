@@ -477,31 +477,6 @@ h1,h2,h3,h4,h5,h6 {
   text-transform: capitalize;
   color: #787878;
 }
-/* category carousel */
-.category-carousel .category-item {
-  background: #FFFFFF;
-  border: 1px solid #FBFBFB;
-  box-shadow: 0px 5px 22px rgba(0, 0, 0, 0.04);
-  border-radius: 16px;
-  text-align: center;
-  padding: 60px 20px;
-  margin: 20px 0;
-  transition: box-shadow 0.3s ease-out, transform 0.3s ease-out;
-}
-.category-carousel .category-item:hover {
-  transform: translate3d(0,-10px,0);
-  box-shadow: 0px 21px 44px rgba(0, 0, 0, 0.08);
-}
-.category-carousel .category-item .category-title {
-  font-weight: 600;
-  font-size: 20px;
-  line-height: 27px;
-  letter-spacing: 0.02em;
-  text-transform: capitalize;
-  color: #222222;
-  margin-top: 20px;
-}
-
 /* brand carousel */
 .brand-carousel .brand-item {
   background: #FFFFFF;
@@ -675,6 +650,8 @@ h1,h2,h3,h4,h5,h6 {
     font-weight: 700;
     border-bottom: 1px solid #d1d1d1;
   }
+  
+
   .offcanvas-body .filter-categories {
     width: 100%;
     margin-bottom: 20px !important;
@@ -720,3 +697,12 @@ h1,h2,h3,h4,h5,h6 {
     height: 740px;
   }
 }
+.category-carousel .swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px; /* Set a fixed width for the slide */
+  height: 200px; /* Set a fixed height for the slide */
+  overflow: hidden; /* Hide overflow to maintain uniformity */
+}
+
