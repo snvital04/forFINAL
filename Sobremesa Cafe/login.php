@@ -1,85 +1,72 @@
-<!-- login.html -->
-<!-- Pills navs -->
-<ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
-    <li class="nav-item" role="presentation">
-        <a class="nav-link active" id="tab-login" data-bs-toggle="pill" href="#pills-login" role="tab"
-           aria-controls="pills-login" aria-selected="true">Login</a>
-    </li>
-    <li class="nav-item" role="presentation">
-        <a class="nav-link" id="tab-register" data-bs-toggle="pill" href="#pills-register" role="tab"
-           aria-controls="pills-register" aria-selected="false">Register</a>
-    </li>
-</ul>
-<!-- Pills navs -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <style>
+        .bg-custom {
+            background-color: red;
+        }
+        .exit-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1000; /* Ensure it stays on top */
+        }
+    </style>
+</head>
+<body class="bg-transparent">
+<section class="vh-100 bg-custom ">
+    
+    <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                    <div class="card-body p-5 text-center">
+                        <a type="button" class="btn btn-danger exit-button" href="index.php">X</a>
+                        <div class="mb-md-5 mt-md-4 pb-5">
 
-<div class="tab-content">
-    <div class="tab-pane fade show active" id="pills-login" role="tabpanel" aria-labelledby="tab-login">
-        <form style="padding:10px;margin-top:20px;">
-            <h1 class="text-center">LOGIN</h1>
-            <div class="form-floating">
-                <input class="form-control"type="email" id="floatingEmail"/>
-                <label for="floatingEmail">Email:</label>
-                
-            </div>
-            <div class="form-floating">
-                <input class="form-control"type="password" id="floatingpass"  />
-                <label for="floatingpass">Password:</label>
-            </div>
-            <div class="row mb-4">
-                <div class="col d-flex justify-content-center">
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="" id="form2Example31" checked />
-                        <label class="form-check-label" for="form2Example31"> Remember me </label>
+                            <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+                            <p class="text-white-50 mb-5">Please enter your Email and password!</p>
+
+                            <!-- Start of the form -->
+                            <form action="#" method="POST">
+                                <div data-mdb-input-init class="form-outline form-white mb-4">
+                                    <label class="form-label" for="typeEmailX">Email</label>
+                                    <input type="email" id="typeEmailX" name="email" class="form-control form-control-lg" required />
+                                </div>
+
+                                <div data-mdb-input-init class="form-outline form-white mb-4">
+                                    <label class="form-label" for="typePasswordX">Password</label>  
+                                    <input type="password" id="typePasswordX" name="password" class="form-control form-control-lg" required />
+                                </div>
+
+                                <p class="small mb-5 pb-lg-2"><a class="text-white-50" href="#!">Forgot password?</a></p>
+
+                                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit">Login</button>
+                            </form>
+                            <!-- End of the form -->
+
+                            <div class="d-flex justify-content-center text-center mt-4 pt-1">
+                                <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                                <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
+                                <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a>
+                            </div>
+
+                        </div>
+
+                        <div>
+                            <p class="mb-0">Don't have an account? <a href="register.php" class="text-white-50 fw-bold">Sign Up</a></p>
+                        </div>
+
                     </div>
                 </div>
-                <div class="col">
-                    <a href="#!">Forgot password?</a>
-                </div>
             </div>
-            <button type="button" class="btn btn-primary btn-block mb-4">Log in</button>
-        </form>
+        </div>
     </div>
-
-    <div class="tab-pane fade" id="pills-register" role="tabpanel" aria-labelledby="tab-register">
-        <form> 
-            <h1 class="text-center">Registration Form</h1>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="firstName">First Name</label>
-                <input type="text" id="firstName" class="form-control" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="lastName">Last Name</label>
-                <input type="text" id="lastName" class="form-control" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="birthdayDate">Birthday</label>
-                <input type="date" class="form-control" id="birthdayDate" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label">Gender:</label>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="femaleGender"
-                        value="option1" />
-                    <label class="form-check-label" for="femaleGender">Female</label>
-                </div>
-                <div class="form-check form-check-inline">
-                    <input class="form-check-input" type="radio" name="inlineRadioOptions" id="maleGender"
-                        value="option2" />
-                    <label class="form-check-label" for="maleGender">Male</label>
-                </div>
-            </div>
-            <div class="form-outline mb-4">
-                <label class="form-label" for="emailAddress">Email</label>
-                <input type="email" id="emailAddress" class="form-control form-control-lg" />
-            </div>
-            <div class="form-outline mb-4">
-                <label class=" form-label" for="phoneNumber">Phone Number</label>
-                <input type="tel" id="phoneNumber" class="form-control form-control-lg" />
-            </div>
-            <div class="mt-4 pt-2">
-                <input data-mdb-ripple-init class="btn btn-primary btn-lg" type="submit" value="Submit" />
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Pills content -->
+</section>
+<script src="js/login.js"></script>
+</body>
+</html>
