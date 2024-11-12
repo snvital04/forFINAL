@@ -1,5 +1,5 @@
 <?php
-include 'php/reg.php';
+include __DIR__ . '/../php/reg.php';
 ?>
 <div class="modal fade" id="signUpForm" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
@@ -9,7 +9,7 @@ include 'php/reg.php';
         <img src="/Sobremesa Cafe/images/icon/logo.jpg" style="width:100px" alt="Cart">
       </div>
       <div class="modal-body">
-        <form method="post" action="php/reg.php" id="registrationForm">
+        <form method="post" action="../php/reg.php" id="registrationForm">
           <div id="registrationSection">
 
             <div class="form-outline mb-4">

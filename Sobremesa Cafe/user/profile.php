@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 // Fetch user data from the database
-$stmt = $conn->prepare("SELECT firstname, lastname, birthday, username, image_path FROM tbuser WHERE id = ?");
+$stmt = $conn->prepare("SELECT * FROM tbuser WHERE id = ?");
 $stmt->execute([$userId]);
 
 if ($stmt->rowCount() > 0) {
@@ -25,7 +25,7 @@ if ($stmt->rowCount() > 0) {
   $lastname = htmlspecialchars($user['lastname']);
   $birthday = htmlspecialchars($user['birthday']);
   $username = htmlspecialchars($user['username']);
-  $uploaded_image = htmlspecialchars($user['image_path']); // Fetch the existing image path
+  $image_path = htmlspecialchars($user['image_path']); // Fetch the existing image path
 } else {
   header("Location: ../index.php");
   exit();
@@ -48,7 +48,7 @@ if ($stmt->rowCount() > 0) {
   <?php include 'header.php'; ?>
   <!-- /Header -->
 
-  <div class="container">
+  <div class="container py-2">
     <div class="profile-header text-center">
       <h2>User Profile</h2>
       <p class="text-muted">Manage your profile information and settings</p>
@@ -60,16 +60,15 @@ if ($stmt->rowCount() > 0) {
           <div class="card-body">
             <h5 class="card-title">Profile Picture</h5>
             <!-- Display the uploaded image if it exists -->
-            <?php if (!empty($uploaded_image)): ?>
-              <img src="php/<?php echo $uploaded_image; ?>" class="rounded-circle" alt="Profile Picture"
-                style="width: 100px; height: 100px;">
+            <?php if (!empty($image_path)): ?>
+            <img src="php/<?php echo htmlspecialchars($_SESSION['image_path']) ?>"
+              class="border border-dark rounded-circle" alt="Profile Picture" style="width: 100px; height: 100px;">
             <?php else: ?>
-              <p>No profile picture uploaded.</p>
+            <p>No profile picture uploaded.</p>
             <?php endif; ?>
 
-            <form action="php/profile.php" method="post" enctype="multipart/form-data">
+            <form action="php/profile.php" class="py-1" method="post" enctype="multipart/form-data">
               <input type="file" name="image" accept="image/*" required>
-
               <div class="mt-3">
                 <input type="submit" class="btn btn-primary btn-block" value="Upload Image">
               </div>
@@ -97,7 +96,7 @@ if ($stmt->rowCount() > 0) {
               </div>
               <div class="form-group">
                 <label for="lastname">Last Name</label>
-                <input type="text" class="form-control" name="lastname" id="lastname"
+                <input type=" text" class="form-control" name="lastname" id="lastname"
                   value="<?php echo isset($lastname) ? htmlspecialchars($lastname) : ''; ?>">
               </div>
               <div class="form-group">
@@ -107,8 +106,8 @@ if ($stmt->rowCount() > 0) {
               </div>
               <div class="form-group">
                 <label for="address">Address</label>
-                <textarea class="form-control" name="address" id="address" rows="3">
-                  <?php echo isset($address) ? htmlspecialchars($address) : '123 Main St, Anytown, USA'; ?></textarea>
+                <textarea class="form-control" name="address" id="address"
+                  rows="3"><?php echo isset($address) ? htmlspecialchars($address) : '123 Main St, Anytown, USA'; ?></textarea>
               </div>
               <button type="submit" name="update_profile" class="btn btn-success">Save Changes</button>
             </form>
