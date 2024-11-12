@@ -48,3 +48,17 @@ document.getElementById('scrollLeftButton').addEventListener('click', () => {
         behavior: 'smooth'
     });
 });
+
+
+ // Use Fetch API to load the header
+ fetch('header.php')
+ .then(response => {
+     if (!response.ok) {
+         throw new Error('Network response was not ok ' + response.statusText);
+     }
+     return response.text();
+ })
+ .then(data => {
+     document.getElementById('header').innerHTML = data; // Insert the header into the div
+ })
+ .catch(error => console.error('Error loading header:', error));
