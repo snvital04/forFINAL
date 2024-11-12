@@ -16,7 +16,7 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 
 // Fetch user data from the database
-$stmt = $conn->prepare("SELECT firstname, lastname, birthday, username, image_path FROM tbuser WHERE id = ?");
+$stmt = $conn->prepare("SELECT * FROM tbuser WHERE id = ?");
 $stmt->execute([$userId]);
 
 if ($stmt->rowCount() > 0) {
@@ -25,7 +25,7 @@ if ($stmt->rowCount() > 0) {
   $lastname = htmlspecialchars($user['lastname']);
   $birthday = htmlspecialchars($user['birthday']);
   $username = htmlspecialchars($user['username']);
-  $uploaded_image = htmlspecialchars($user['image_path']); // Fetch the existing image path
+  $image_path = htmlspecialchars($user['image_path']); // Fetch the existing image path
 } else {
   header("Location: ../index.php");
   exit();
@@ -107,3 +107,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_FILES['image'])) {
     $errorMessage = "Error: " . $_FILES['image']['error'];
   }
 }
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+  header("Location: ../index.php");
+  exit();
+}
+
+// Get user ID from session
+// Query to select the user by username or email

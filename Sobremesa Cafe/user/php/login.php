@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $_SESSION['username'] = $user['username']; // Store username in session
     $_SESSION['fname'] = $user['firstname'];
     $_SESSION['lname'] = $user['lastname'];
-    $_SESSION['uploaded_image'] = ($user['image_path']);
+    $_SESSION['image_path'] = $user['image_path'];
     header("Location: ../index.php");
     exit(); // Ensure no further code is executed after the redirect
   } else {
