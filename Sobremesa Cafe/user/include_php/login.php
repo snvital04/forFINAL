@@ -13,13 +13,13 @@
           <!-- Start of the form -->
           <form method="POST" action="php/login.php" id="validateForm">
             <div class="form-outline form-white mb-4">
-              <label class="form-label" for="loginkey">Username</label>
-              <input type="text" id="loginkey" name="loginkey" class="form-control form-control-lg" required />
+              <input type="text" id="loginkey" placeholder="Username:" name="loginkey"
+                class="form-control form-control-lg" required />
               <span id="error_filluser" class="text-danger"></span>
             </div>
-            <div class="form-outline form-white mb-4">
-              <label class="form-label" for="pword">Password</label>
-              <input type="password" id="pword" name="pword" class="form-control form-control-lg" required />
+            <div class="form-outline form-white mb-4">s
+              <input type="password" id="pword" placeholder="Password:" name="pword"
+                class="form-control form-control-lg" required />
               <span id="error_fillpass" class="text-danger"></span>
             </div>
             <p class="small mb-5 pb-lg-2"><a class="" href="#!">Forgot password?</a></p>

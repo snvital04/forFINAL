@@ -1,16 +1,12 @@
 <?php
-include __DIR__ . '/db/dbcon.php';
-
-// Check if the user is logged in
-$isLoggedIn = isset($_SESSION['username']);
-$forfname = isset($_SESSION['fname']);
-$forlname = isset($_SESSION['lname']);
-$image_path = isset($_SESSION['image_path']);
-
+include 'php/session.php';
+$user_id = isset($_SESSION['user_id']); // Store user ID in session
+$image_path = isset($_SESSION['image_path']); // Store user ID in session
 ?>
 
 <header class="fixed-top bg-white shadow">
   <nav class="navbar navbar-expand-lg justify-content-center">
+
     <div class="px-0 px-sm-5">
       <h1>
         <a class="navbar-brand" href="/Sobremesa Cafe/user/index.php">
@@ -43,63 +39,69 @@ $image_path = isset($_SESSION['image_path']);
         </ul>
       </div>
     </div>
-    <!-- /For responsive menu -->
 
     <!-- collapse navbar -->
     <div class="collapse navbar-collapse" id="MainNav">
       <ul class="navbar-nav mx-auto my-3 my-lg-0">
+
         <li class="nav-item px-4 fs-5 active">
           <a class="nav-link f-color" href="index.php">Home</a>
         </li>
+
         <li class="nav-item px-4 fs-5 dropdown">
-          <a class="nav-link f-color" href="#TrendingProducts">Trending Products</a>
+          <a class="nav-link f-color" href="#AllProducts">All Products</a>
         </li>
+
         <li class="nav-item px-4 fs-5">
           <a class="nav-link f-color" href="#Best-seller">Best Seller</a>
         </li>
+
         <li class="nav-item px-4 fs-5">
           <a class="nav-link f-color" href="#About">About</a>
         </li>
+
       </ul>
     </div>
-    <!-- /collapse navbar -->
 
     <!-- Login and Cart Tab -->
     <div class="ms-lg-auto text-right navbar-content d-none d-lg-block px-5">
       <div class="d-flex">
-        <ul class="list-unstyled list-inline ms-auto mb-0">
-          <li class="nav-item list-inline-item navbar-account">
-            <?php if ($isLoggedIn || $forfname || $forlname): ?>
-              <a href="profile.php" class="btn btn-lg">
-                <?php if (!empty($image_path)): ?>
-                  <img src="php/<?php echo htmlspecialchars($_SESSION['image_path']) ?>"
-                    class="rounded-circle border border-dark" alt="Profile Picture" style="width: 35px; height: 35px;">
-                <?php else: ?>
-                  <p>No profile picture uploaded.</p>
-                <?php endif; ?>
-                <?php echo htmlspecialchars($_SESSION['fname'] ?? '') . ' ' . htmlspecialchars($_SESSION['lname'] ?? ''); ?>
-              </a>
-              <a class="btn btn-lg" href="../php/logout.php">
-                <img src="images/icon/logout.png" style="width:25px;" alt="Logout">
-                Logout
-              </a>
-              <a type="button" class="btn btn-lg" href="addcart.php">
-                <img src="images/icon/cart.png" style="width:25px;" alt="Cart">
-                Your Cart
-              </a>
-            <?php else: ?>
-              <button class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#loginForm">
-                <img src="images/icon/user.png" style="width:25px;" alt="Login">
-                Login
-              </button>
-              <button class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#signUpForm">
-                Register
-              </button>
-            <?php endif; ?>
-          </li>
-        </ul>
+
+        <?php if ($user_id): ?>
+        <a href="profile.php" class="btn btn-lg">
+          <?php if (!empty($image_path)): ?>
+          <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
+            class="rounded-circle border border-dark" alt="Profile Picture" style="width: 35px; height: 35px;">
+          <?php else: ?>
+          <img src="images/icon/profile.png" style="width: 35px; height: 35px;">
+          <?php endif; ?>
+          <?php echo htmlspecialchars($_SESSION['firstname'] ?? '') . ' ' . htmlspecialchars($_SESSION['lastname'] ?? ''); ?>
+        </a>
+
+        <a class="btn btn-lg" href="php/logout.php">
+          <img src="images/icon/logout.png" style="width:25px;" alt="Logout">
+          Logout
+        </a>
+
+        <a type="button" class="btn btn-lg" href="addcart.php">
+          <img src="images/icon/cart.png" style="width:25px;" alt="Cart">
+          Your Cart
+        </a>
+
+        <?php else: ?>
+        <button class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#loginForm">
+          <img src="images/icon/user.png" style="width:25px;" alt="Login">
+          Login
+        </button>
+
+        <button class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#signUpForm">
+          Register
+        </button>
+
+        <?php endif; ?>
+
       </div>
     </div>
-    <!-- /Login and Cart Tab -->
+
   </nav>
 </header>

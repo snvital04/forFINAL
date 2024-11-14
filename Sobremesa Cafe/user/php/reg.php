@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . '/../db/dbcon.php';
+include __DIR__ . '/../../db/dbcon.php';
 
 // Initialize error message variable
 $error_message = "";

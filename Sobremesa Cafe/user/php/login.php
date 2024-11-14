@@ -1,10 +1,8 @@
 <?php
-session_start();
-include('../db/dbcon.php');
+include 'session.php';
+include __DIR__ . '/../../db/dbcon.php';
 
-// Initialize error message variable
-$error_message = "";
-$error_userpass = "Error: Invalid username or password.";
+
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -26,8 +24,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Password is correct, set session and redirect to dashboard
     $_SESSION['user_id'] = $user['id']; // Store user ID in session
     $_SESSION['username'] = $user['username']; // Store username in session
-    $_SESSION['fname'] = $user['firstname'];
-    $_SESSION['lname'] = $user['lastname'];
+    $_SESSION['firstname'] = $user['firstname'];
+    $_SESSION['lastname'] = $user['lastname'];
+    $_SESSION['birthday'] = $user['birthday'];
     $_SESSION['image_path'] = $user['image_path'];
     header("Location: ../index.php");
     exit(); // Ensure no further code is executed after the redirect
