@@ -1,36 +1,8 @@
 <?php
-session_start();
-include __DIR__ . '/db/dbcon.php';
-
-// Initialize messages
-$successMessage = "";
-$errorMessage = "";
-
-// Check if the user is logged in
-if (!isset($_SESSION['user_id'])) {
-  header("Location: ../index.php");
-  exit();
-}
-
-// Get user ID from session
-$userId = $_SESSION['user_id'];
-
-// Fetch user data from the database
-$stmt = $conn->prepare("SELECT * FROM tbuser WHERE id = ?");
-$stmt->execute([$userId]);
-
-if ($stmt->rowCount() > 0) {
-  $user = $stmt->fetch(PDO::FETCH_ASSOC);
-  $firstname = htmlspecialchars($user['firstname']);
-  $lastname = htmlspecialchars($user['lastname']);
-  $birthday = htmlspecialchars($user['birthday']);
-  $username = htmlspecialchars($user['username']);
-  $image_path = htmlspecialchars($user['image_path']); // Fetch the existing image path
-} else {
-  header("Location: ../index.php");
-  exit();
-}
+include 'php/profile.php';
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,15 +31,21 @@ if ($stmt->rowCount() > 0) {
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Profile Picture</h5>
-            <!-- Display the uploaded image if it exists -->
-            <?php if (!empty($image_path)): ?>
-            <img src="php/<?php echo htmlspecialchars($_SESSION['image_path']) ?>"
-              class="border border-dark rounded-circle" alt="Profile Picture" style="width: 100px; height: 100px;">
-            <?php else: ?>
-            <p>No profile picture uploaded.</p>
-            <?php endif; ?>
+            <!-- Button to trigger modal -->
+            <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#updateUser">
+              <?php if (!empty($image_path)): ?>
+              <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
+                class="border border-dark rounded-circle" alt="Profile Picture" style="width: 100px; height: 100px;">
+              <?php else: ?>
+              <p>No profile picture uploaded.</p>
+              <?php endif; ?>
+              <span class="text-secondary">
+                @<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>
+              </span>
 
-            <form action="php/profile.php" class="py-1" method="post" enctype="multipart/form-data">
+            </button>
+            <form action="php/upload.php" class="py-1" method="post" enctype="multipart/form-data">
+              <input type="hidden" name="form_id" value="update_img">
               <input type="file" name="image" accept="image/*" required>
               <div class="mt-3">
                 <input type="submit" class="btn btn-primary btn-block" value="Upload Image">
@@ -77,39 +55,86 @@ if ($stmt->rowCount() > 0) {
           </div>
         </div>
       </div>
+      <!-- Modal edit username -->
+      <div class="modal fade" id="updateUser" tabindex="-1" aria-labelledby="updateUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updateUser ModalLabel">Edit Profile</h5>
+              <button type="button" class="close bg-danger " data-bs-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col text-center">
+                  <!-- Button to trigger modal -->
+
+                  <?php if (!empty($image_path)): ?>
+                  <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
+                    class="border border-dark rounded-circle" alt="Profile Picture"
+                    style="width: 100px; height: 100px;">
+                  <?php else: ?>
+                  <p>No profile picture uploaded.</p>
+                  <?php endif; ?><br>
+                  <span class="text-secondary">
+                    @<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>
+                  </span>
+                </div>
+
+                <form method="POST">
+                  <input type="hidden" name="form_id" value="update_username">
+                  <br><br>
+                  <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" class="form-control" name="username"
+                      value=" <?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>" required>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                    </div>
+                  </div>
+                </form>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div class="col-md-8">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Personal Information</h5>
-
-            <form method="POST" id="profileForm" action="php/profile.php">
-              <div class="form-group">
-                <label for="username">User Name</label>
-                <input type="text" class="form-control" name="username" id="username"
-                  value="<?php echo isset($username) ? htmlspecialchars($username) : ''; ?>">
-              </div>
+            <form method="POST" id="profileForm" action="">
+              <input type="hidden" name="form_id" value="update_info">
               <div class="form-group">
                 <label for="firstname">First Name</label>
                 <input type="text" class="form-control" name="firstname" id="firstname"
-                  value="<?php echo isset($firstname) ? htmlspecialchars($firstname) : ''; ?>">
+                  value="<?php echo htmlspecialchars($_SESSION['firstname'] ?? ''); ?>" disabled>
               </div>
               <div class="form-group">
                 <label for="lastname">Last Name</label>
-                <input type=" text" class="form-control" name="lastname" id="lastname"
-                  value="<?php echo isset($lastname) ? htmlspecialchars($lastname) : ''; ?>">
+                <input type="text" class="form-control" name="lastname" id="lastname"
+                  value="<?php echo htmlspecialchars($_SESSION['lastname'] ?? ''); ?>" disabled>
               </div>
               <div class="form-group">
                 <label for="bday">Birthday</label>
                 <input type="date" class="form-control" name="bday" id="bday"
-                  value="<?php echo isset($birthday) ? htmlspecialchars($birthday) : ''; ?>">
+                  value="<?php echo htmlspecialchars($_SESSION['birthday'] ?? ''); ?>" disabled>
               </div>
               <div class="form-group">
                 <label for="address">Address</label>
-                <textarea class="form-control" name="address" id="address"
-                  rows="3"><?php echo isset($address) ? htmlspecialchars($address) : '123 Main St, Anytown, USA'; ?></textarea>
+                <textarea class="form-control" name="address" id="address" rows="3"
+                  disabled><?php echo isset($address) ? htmlspecialchars($address) : '123 Main St, Anytown, USA'; ?></textarea>
               </div>
-              <button type="submit" name="update_profile" class="btn btn-success">Save Changes</button>
+
+              <button type="button" id="editButton" class="btn btn-primary">Edit</button>
+              <button type="submit" name="update_profile" id="saveButton" class="btn btn-success"
+                style="display: none;">Save Changes</button>
+              <button type="button" id="cancelButton" class="btn btn-secondary" style="display: none;">Cancel</button>
             </form>
           </div>
         </div>
@@ -152,7 +177,11 @@ if ($stmt->rowCount() > 0) {
       </div>
     </div>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
+  </script>
+  <script src="js/profile.js"></script>
 </body>
+
 
 </html>

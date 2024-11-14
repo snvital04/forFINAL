@@ -1,7 +1,3 @@
-<?php
-session_start();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,19 +13,14 @@ session_start();
 </head>
 
 <body id="home">
-  <!-- Header Include the header.php file-->
-  <?php
-  //header
-  include 'header.php';
-  //login
-  include 'include_php/login.php';
-  //register
-  include 'include_php/register.php';
 
+  <?php
+  include 'header.php';
+  include 'include_php/login.php';
+  include 'include_php/register.php';
   include 'include_php/cart.php';
   ?>
 
-  <!-- Main -->
   <main class="container mt-5">
 
     <?php
@@ -37,21 +28,18 @@ session_start();
     include 'include_php/carousel.php';
     ?>
 
-
-    <!-- BEST SELLER -->
     <section class="" id="Best-seller">
-
     </section>
-    <!--/ BEST SELLER -->
 
-    <!-- TrendingProducts -->
-    <section class="py-5" id="TrendingProducts">
+    <!-- AllProducts -->
+    <section class="py-5" id="AllProducts">
       <div class="container-fluid">
         <div class="row">
           <div class="col-md-12">
             <div class="bootstrap-tabs product-tabs">
+
               <div class="tabs-header d-flex justify-content-between border-bottom my-5">
-                <h3>Trending Products</h3>
+                <h3>All Products</h3>
                 <nav>
                   <div class="nav nav-tabs" id="nav-tab" role="tablist">
                     <a href="#" class="nav-link text-uppercase fs-6 active" id="nav-all-tab" data-bs-toggle="tab"
@@ -63,12 +51,14 @@ session_start();
                   </div>
                 </nav>
               </div>
+
               <div class="tab-content" id="nav-tabContent">
                 <div class="tab-pane fade show active" id="nav-all" role="tabpanel" aria-labelledby="nav-all-tab">
                   <div class="product-grid row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5">
 
                     <!-- card -->
                     <div class="card border-0 rounded-0 shadow" style="width: 18rem;">
+
                       <button type="button">
                         <img src="images/foods&drinks/BACON CHEESE.png" class="card-img-top rounded-0 image-fluid"
                           alt="images/foods&drinks/BACON CHEESE.png">
@@ -85,6 +75,7 @@ session_start();
                           </div>
                         </div>
                       </div>
+
                       <div class="row align-items-center text-center g-0">
                         <div class="col-4">
                           <h5>$129</h5>
@@ -94,8 +85,8 @@ session_start();
                             data-bs-target="#singlePage">ADD TO CART</a>
                         </div>
                       </div>
+
                     </div>
-                    <!-- card -->
 
                   </div>
                 </div>
@@ -103,24 +94,20 @@ session_start();
 
             </div>
           </div>
-
         </div>
       </div>
-      </div>
     </section>
-    <!-- //TrendingProducts -->
 
-    <!-- FOODS -->
-    <!-- //FOODS -->
   </main>
-  <!--/MAIN  -->
 
   <!--ABOUT  -->
   <footer class="">
+
     <section id="About">
       <div id="footer-bottom">
         <div class="container-fluid">
           <div class="row">
+
             <div>
               <h1>About</h1>
               <h1>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Quos incidunt est quae iste natus
@@ -132,17 +119,17 @@ session_start();
                 repellat facilis asperiores quisquam. Laudantium neque in incidunt et, harum consequuntur praesentium
                 ab?</h1>
             </div>
+
             <div class="col-md-6 copyright">
               <p>© 2025 Sobremesa Cafe. All rights reserved.</p>
             </div>
+
           </div>
         </div>
       </div>
     </section>
 
   </footer>
-
-
 
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
