@@ -1,46 +1,56 @@
 <?php
 include 'session.php';
-include __DIR__ . '/../../db/dbcon.php';
+include __DIR__ . '../../../db/dbcon.php';
 
-
-
+$errors = [];
+$loginkey = $PassWord ="";
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Trim whitespace from input
-  $loginkey = trim($_POST['loginkey']);
-  $PassWord = trim($_POST['pword']);
+    // Validate input and trim whitespace
+    if (empty($_POST["loginkey"])) {
+        $errors[] = "Email is required.";
+    } else {
+        $email = trim($_POST["loginkey"]);
+    }
 
-  // Query to select the user by username or email
-  $pdoQuery = 'SELECT * FROM tbuser WHERE username = :username ';
-  $pdoResult = $conn->prepare($pdoQuery);
-  $pdoResult->execute([
-    ":username" => $loginkey,
-  ]);
+    if (empty($_POST["pword"])) {
+        $errors[] = "Password is required.";
+    } else {
+        $password = trim($_POST["pword"]);
+    }
 
-  // Fetch the user data
-  $user = $pdoResult->fetch(PDO::FETCH_ASSOC);
+    // Check if there are no errors
+    if (count($errors) === 0) {
+        // Prepare SQL query to check credentials
+        $stmt = $conn->prepare("SELECT * FROM Userinfo WHERE EmailAddress = :email");
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
 
-  if ($user) {
-    // Password is correct, set session and redirect to dashboard
-    $_SESSION['user_id'] = $user['id']; // Store user ID in session
-    $_SESSION['username'] = $user['username']; // Store username in session
-    $_SESSION['firstname'] = $user['firstname'];
-    $_SESSION['lastname'] = $user['lastname'];
-    $_SESSION['birthday'] = $user['birthday'];
-    $_SESSION['image_path'] = $user['image_path'];
-    header("Location: ../index.php");
-    exit(); // Ensure no further code is executed after the redirect
-  } else {
-    // Set the error message
-    header("Location: ../index.php?showLoginModal=true");
-    exit();
-    // Optionally, you could redirect back to the login page with an error message
-    // header("Location: login.php?error=" . urlencode($error_message));
-    // exit();
-  }
-}
+        // Check if the user exists
+        if ($stmt->rowCount() > 0) {
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Verify the password (assuming you have hashed the password)
+            // If you haven't hashed passwords, you should implement that for security
+            // if (password_verify($password, $user['Password'])) {
+            //     // Set session variables
+                $_SESSION['user_id'] = $user['UserId'];
+                $_SESSION['email'] = $user['EmailAddress'];
+                $_SESSION['verified'] = $user['VerifiedUser'];
 
-// Optionally, you can display the error message on the login page if needed
-if (!empty($error_message)) {
-  echo "<div class='error'>$error_message</div>";
+                // Redirect to a welcome page or dashboard
+                header("Location: ../index.php");
+                exit();
+            } else {
+                $errors[] = "Invalid password.";
+            }
+        // } else {
+        //     $errors[] = "No user found with that email.";
+        // }
+    }
+
+    // Display errors
+    foreach ($errors as $error) {
+        echo "<p style='color:red;'>$error</p>";
+    }
 }
