@@ -12,6 +12,7 @@ include 'php/profile.php';
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
   <link rel="stylesheet" type="text/css" href="style.css">
+
   <title>User Profile</title>
 </head>
 
@@ -34,10 +35,10 @@ include 'php/profile.php';
             <!-- Button to trigger modal -->
             <button type="button" class="btn " data-bs-toggle="modal" data-bs-target="#updateUser">
               <?php if (!empty($image_path)): ?>
-              <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
-                class="border border-dark rounded-circle" alt="Profile Picture" style="width: 100px; height: 100px;">
+                <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
+                  class="border border-dark rounded-circle" alt="Profile Picture" style="width: 100px; height: 100px;">
               <?php else: ?>
-              <p>No profile picture uploaded.</p>
+                <p>No profile picture uploaded.</p>
               <?php endif; ?>
               <span class="text-secondary">
                 @<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>
@@ -71,28 +72,28 @@ include 'php/profile.php';
                   <!-- Button to trigger modal -->
 
                   <?php if (!empty($image_path)): ?>
-                  <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
-                    class="border border-dark rounded-circle" alt="Profile Picture"
-                    style="width: 100px; height: 100px;">
+                    <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
+                      class="border border-dark rounded-circle" alt="Profile Picture"
+                      style="width: 100px; height: 100px;">
                   <?php else: ?>
-                  <p>No profile picture uploaded.</p>
+                    <p>No profile picture uploaded.</p>
                   <?php endif; ?><br>
                   <span class="text-secondary">
                     @<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>
                   </span>
                 </div>
 
-                <form method="POST">
+                <form method="POST" action="php/profile.php">
                   <input type="hidden" name="form_id" value="update_username">
                   <br><br>
                   <div class="form-group">
                     <label>Username</label>
-                    <input type="text" class="form-control" name="username"
-                      value=" <?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>" required>
+                    <input type="text" class="form-control" name="username" value=""
+                      placeholder="@<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>" required>
 
                     <div class="modal-footer">
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                      <button type="submit" class="btn btn-primary">Save Changes</button>
+                      <button type="submit" class="btn btn-primary" id="confirmSubmit">Save Changes</button>
                     </div>
                   </div>
                 </form>
@@ -104,11 +105,18 @@ include 'php/profile.php';
         </div>
       </div>
 
+      <!-- Loading Spinner -->
+      <div id="loading" class="text-center mt-3">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+
       <div class="col-md-8">
         <div class="card">
           <div class="card-body">
             <h5 class="card-title">Personal Information</h5>
-            <form method="POST" id="profileForm" action="">
+            <form method="POST" id="profileForm" action="php/profile.php">
               <input type="hidden" name="form_id" value="update_info">
               <div class="form-group">
                 <label for="firstname">First Name</label>

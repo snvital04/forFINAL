@@ -6,7 +6,6 @@ include 'session.php';
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
   if (isset($_POST['form_id'])) {
     if ($_POST['form_id'] === 'update_info') {
-      $username =  $_SESSION['username'];
       $firstName = htmlspecialchars(trim($_POST['firstname']));
       $lastName = htmlspecialchars(trim($_POST['lastname']));
       $birthday = htmlspecialchars(trim($_POST['bday']));
@@ -32,13 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
       $stmt->execute([$username]);
 
       if ($stmt->fetchColumn() > 0) {
-        $error_message = 'username already exist';
-        header("Location: ../profile.php");
+        echo $error_message = 'username already exist';
+        header("Location: ../profile.php?showUserModal=true");
         exit();
       } else {
         $stmt = $conn->prepare("UPDATE tbuser SET username= ? WHERE id = ?");
         $stmt->execute([$username, $_SESSION['user_id']]);
-        $_SESSION['username'] = $username;
+        echo $_SESSION['username'] = $username;
         header("Location: ../profile.php");
         exit();
       }

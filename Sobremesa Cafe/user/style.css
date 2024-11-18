@@ -1,17 +1,17 @@
-body{
-  padding-top: 85px;
+.f-color{
+  color: #22577a;
+}
+.bg-custom {
   background-color: aliceblue;
+}body{
+  padding-top: 85px;
+  background-color: #22577a;
 }
 section {
   height: 100vh; /* Each section takes full viewport height for demonstration */
   padding-top: 90px;
 }
-.f-color{
-  color: red;
-}
-.bg-custom {
-  background-color: aliceblue;
-}
+
 .responsive-text-slide{
   position: static; /* Default position */
 }
@@ -24,6 +24,10 @@ section {
   }
 }
 
+
+#loading {
+    display: none;
+}
 
 
 

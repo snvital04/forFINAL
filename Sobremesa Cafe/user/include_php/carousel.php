@@ -1,4 +1,4 @@
-<div id="myCarousel" class="carousel slide shadow" data-bs-ride="carousel" data-bs-interval="3000">
+<div id="myCarousel" class="carousel slide shadow bg-custom" data-bs-ride="carousel" data-bs-interval="3000">
   <div class="carousel-inner">
     <div class="carousel-item active">
       <div class="row justify-content-center align-items-center ">

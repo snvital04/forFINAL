@@ -29,3 +29,19 @@
       editButton.style.display = 'inline-block';
     });
   });
+
+  document.getElementById('confirmSubmit').onclick = function() {
+    // Show loading spinner
+    document.getElementById('loading').style.display = 'block';
+    // Submit the form
+    document.getElementById('uploadForm').submit();
+};
+
+function showUserModal() {
+  const userModal = new bootstrap.Modal(document.getElementById('updateUser'));
+  userModal.show();
+}// Check if the URL contains the showLoginModal parameter
+const urlParams = new URLSearchParams(window.location.search);
+if (urlParams.has('showUserModal') && urlParams.get('showUserModal') === 'true') {
+  showUserModal();
+}
