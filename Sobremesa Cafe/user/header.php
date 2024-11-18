@@ -64,37 +64,47 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
     </div>
 
     <!-- Login and Cart Tab -->
-    <div class="ms-lg-auto text-right navbar-content d-none d-lg-block px-5">
-      <div class="d-flex">
+    <div class="ms-lg-auto text-right navbar-content d-none d-lg-block px-5 mx-5 f-color ">
+      <div class="d-flex ">
 
         <?php if ($user_id): ?>
-        <a href="profile.php" class="btn btn-lg">
+        <a type="button" class="btn btn-lg f-color" href="addcart.php">
+          <img src="images/icon/cart.png" style="width:50px;" alt="Cart">
+
+        </a>
+
+        <div class="dropdown px-5 btn btn-lg f-color">
+          <img src="php/image_upload/profile_pic.png" alt="Dropdown Trigger" class="img-thumbnail"
+            id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false"
+            style="cursor: pointer;width: 60px; height: 60px;border:0;">
           <?php if (!empty($image_path)): ?>
-          <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
-            class="rounded-circle border border-dark" alt="Profile Picture" style="width: 35px; height: 35px;">
-          <?php else: ?>
-          <img src="images/icon/profile.png" style="width: 35px; height: 35px;">
-          <?php endif; ?>
-          <?php echo htmlspecialchars($_SESSION['firstname'] ?? '') . ' ' . htmlspecialchars($_SESSION['lastname'] ?? ''); ?>
-        </a>
+          <ul class="dropdown-menu " aria-labelledby="dropdownMenuButton">
+            <li><a href="profile.php" class="btn btn-lg f-color">
+                <?php if (!empty($image_path)): ?>
+                <img src="php/image_upload/profile_pic.png" src="php/image_upload/profile_pic.jpg"
+                  class="rounded-circle border border-dark" alt="Profile Picture" style="width: 35px; height: 35px;">
+                <?php else: ?>
+                <img src="images/icon/profile.png px-5" style="width: 35px; height: 35px;">
+                <?php endif; ?>
+                <?php echo htmlspecialchars($_SESSION['firstname'] ?? '') . ' ' . htmlspecialchars($_SESSION['lastname'] ?? ''); ?>
+              </a>
+            </li>
+            <li><a class="dropdown-item" href="#">Action 2</a></li>
+            <li><a class="btn btn-lg f-color" href="php/logout.php">
+                <img src="images/icon/logout.png" style="width:25px;" alt="Logout">Logout
+              </a></li>
+          </ul>
+        </div>
+        <?php endif; ?>
 
-        <a class="btn btn-lg" href="php/logout.php">
-          <img src="images/icon/logout.png" style="width:25px;" alt="Logout">
-          Logout
         </a>
-
-        <a type="button" class="btn btn-lg" href="addcart.php">
-          <img src="images/icon/cart.png" style="width:25px;" alt="Cart">
-          Your Cart
-        </a>
-
         <?php else: ?>
-        <button class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#loginForm">
+        <button class="btn btn-lg f-color" data-bs-toggle="modal" data-bs-target="#loginForm">
           <img src="images/icon/user.png" style="width:25px;" alt="Login">
           Login
         </button>
 
-        <button class="btn btn-lg" data-bs-toggle="modal" data-bs-target="#signUpForm">
+        <button class="btn btn-lg f-color" data-bs-toggle="modal" data-bs-target="#signUpForm">
           Register
         </button>
 
