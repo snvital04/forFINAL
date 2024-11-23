@@ -1,46 +1,3 @@
-<?php
-session_start();
-include __DIR__ . '/../db/dbcon.php';
-
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-        if ($_POST['form_id'] === 'update_info') {
-            $firstName = htmlspecialchars(trim($_POST['firstname']));
-            $lastName = htmlspecialchars(trim($_POST['lastname']));
-            $birthday = htmlspecialchars(trim($_POST['bday']));
-            $address = htmlspecialchars(trim($_POST['address']));
-
-            $updateStmt = $conn->prepare("UPDATE UserInfo SET firstname = ?, lastname = ?, birthdate = ?, address=? WHERE userid = ?");
-            if ($updateStmt->execute([$firstName, $lastName, $birthday, $address, $_SESSION['user_id']])) {
-                $_SESSION['firstname'] = $firstName;
-                $_SESSION['lastname'] = $lastName;
-                $_SESSION['birthday'] = $birthday;
-                $_SESSION['address'] = $address;
-                header('location:profile.php');
-                exit(); // Ensure to exit after redirect
-            } else {
-                $_SESSION['errorMessage'] = "Error updating profile. Please try again.";
-            }
-        }
-        if ($_POST['form_id'] === 'update_username') {
-            $username = htmlspecialchars(trim($_POST['username']));
-
-            $stmt = $conn->prepare("SELECT COUNT(*) FROM UserAccess WHERE username = ?");
-            $stmt->execute([$username]);
-
-            if ($stmt->fetchColumn() > 0) {
-                echo $error_message = 'Username already exists';
-                header("Location: profile.php?showUserModal=true");
-                exit();
-            } else {
-                $stmt = $conn->prepare("UPDATE UserAccess SET username= ? WHERE id = ?");
-                $stmt->execute([$username, $_SESSION['user_id']]);
-                $_SESSION['username'] = $username;
-                exit();
-            }
-        }
-    }
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,17 +6,18 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="../style.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>User Profile</title>
 </head>
 
 
 <body>
-    <?php include 'header.php'; ?>
 
-    <div class="container py-2">
+    <?php include("header.php");?>
+
+    <section class="container my-3">
         <div class="profile-header text-center text-white">
-            <h2>User Profile</h2>
+            <h2>Admin Profile</h2>
         </div>
 
         <div class="row">
@@ -172,48 +130,15 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     </div>
                 </div>
 
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Order History</h5>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#12345</td>
-                                    <td>2023-01-15</td>
-                                    <td>Shipped</td>
-                                    <td>$49.99</td>
-                                </tr>
-                                <tr>
-                                    <td>#12346</td>
-                                    <td>2023-01-20</td>
-                                    <td>Delivered</td>
-                                    <td>$29.99</td>
-                                </tr>
-                                <tr>
-                                    <td>#12347</td>
-                                    <td>2023-02-05</td>
-                                    <td>Processing</td>
-                                    <td>$19.99</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
             </div>
         </div>
-    </div>
+    </section>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
     </script>
     <script src="js/profile.js"></script>
+    <script src="js/dashboard.js"></script>
 </body>
 
 </html>
