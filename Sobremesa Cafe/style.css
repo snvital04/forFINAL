@@ -1,0 +1,76 @@
+
+.f-color{
+  color: #ff0000;
+}
+.f-color-blue{
+  color: #22577a;
+}
+.bg-body-custom{
+  background-color: #22577a;
+}
+.bg-custom {
+  background-color:#ffffff;
+}
+.bg-red{
+   background-color:#ff0000;
+}
+body{
+  padding-top: 85px;
+  background-color: #22577a;
+}
+section { /* Each section takes full viewport height for demonstration */
+  padding-top: 90px;
+}
+
+
+
+
+.form-check-label {
+  font-size: 14px;
+}
+
+.social-sign-up {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.social-btn {
+  font-size: 14px;
+  margin: 5px;
+  padding: 10px;
+}
+
+.btn-facebook {
+  background-color: #4267B2;
+  color: white;
+}
+
+.btn-google {
+  background-color: #db4437;
+  color: white;
+}
+.responsive-text-slide{
+  position: static; /* Default position */
+}
+
+@media (max-width: 576px) { /* Adjust the max-width as needed */
+  .responsive-text-slide {
+      position: absolute; /* Change to absolute */
+      color: white;
+      font-weight: bold;
+  }
+}
+
+
+#loading {
+    display: none;
+}
+
+
+
+footer {
+  background-color: #f8f9fa;
+  padding: 10px 0;
+  text-align: center;
+}
+

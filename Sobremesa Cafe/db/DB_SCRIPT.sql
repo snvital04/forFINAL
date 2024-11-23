@@ -39,6 +39,7 @@ CREATE TABLE UserAccessPage (
 );
 
 ALTER TABLE UserInfo ADD FOREIGN KEY (Gender) REFERENCES LookUp (LookUpId);
+ALTER TABLE UserInfo ADD FOREIGN KEY (UserAccessId) REFERENCES UserAccess (UserAccessId);
 ALTER TABLE LookUp ADD FOREIGN KEY (CreatedByUserId) REFERENCES UserInfo (UserId);
 ALTER TABLE UserAccess ADD FOREIGN KEY (UserId) REFERENCES UserInfo (UserId);
 ALTER TABLE UserAccessPage ADD FOREIGN KEY (LookUpId) REFERENCES LookUp (LookUpId);
