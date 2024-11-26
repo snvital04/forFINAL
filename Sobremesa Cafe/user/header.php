@@ -4,12 +4,12 @@ $user_id = isset($_SESSION['user_id']); // Store user ID in session
 $image_path = isset($_SESSION['image_path']); // Store user ID in session
 ?>
 
-<header class="fixed-top shadow bg-custom">
+<header class="fixed-top shadow bg-white">
     <nav class="navbar navbar-expand-lg justify-content-center">
 
         <div class="px-0 px-sm-5">
             <h1>
-                <a class="navbar-brand " href="./../index.php">
+                <a class="navbar-brand " href="../index.php">
                     <img src="images/icon/logo.jpg" class="img-fluid lazy entered loaded rounded-pill"
                         data-ll-status="loaded" style="width:200px;" alt="Sobremesa Cafe/user Logo">
                 </a>
@@ -19,7 +19,7 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
             <ul class="navbar-nav mx-auto my-3 my-lg-0">
 
                 <li class="nav-item px-4 fs-5 active">
-                    <a class="nav-link f-color" href="index.php">Home</a>
+                    <a class="nav-link f-color" href="../index.php">Home</a>
                 </li>
                 <li class="nav-item dropdown px-4 fs-5  active">
                     <a class="nav-link dropdown-toggle f-color" href="#" id="navbarDropdown" role="button"
@@ -27,9 +27,9 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
                         Categories
                     </a>
                     <ul class="dropdown-menu f-color" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item f-color" href="#food">Foods</a></li>
-                        <li><a class="dropdown-item f-color" href="#Coffee">Coffee</a></li>
-                        <li><a class="dropdown-item f-color" href="#Cake">Cake</a></li>
+                        <li><a class="dropdown-item f-color" href="food.php">Foods</a></li>
+                        <li><a class="dropdown-item f-color" href="drinks.php">Drinks</a></li>
+                        <li><a class="dropdown-item f-color" href="cake.php">Cake</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>
@@ -87,14 +87,18 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
 
 
                 <?php else: ?>
-                <a class="btn btn-lg f-color " href="./login.php">
-                    Login
-                </a>
+
 
                 <div class="d-flex justify-content-center">
 
+                    <a class="btn btn-lg f-color " href="../login.php">
+                        Login
+                    </a>
+                </div>
+                <div class="d-flex justify-content-center">
+
                     <!-- Trigger Button for Modal -->
-                    <a class="btn btn-lg f-color" href="./register.php">
+                    <a class="btn btn-lg f-color" href="../register.php">
                         Sign Up
                     </a>
 

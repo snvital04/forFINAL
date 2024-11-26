@@ -55,8 +55,12 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
 
 
 <body>
-    <?php include 'header.php'; ?>
-
+    <?php
+include 'php/session.php';
+$user_id = isset($_SESSION['user_id']); // Store user ID in session
+$image_path = isset($_SESSION['image_path']); // Store user ID in session
+include 'header.php';
+?>
     <div class="container py-2">
         <div class="profile-header text-center text-white">
             <h2>User Profile</h2>
@@ -117,8 +121,8 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                                     <br><br>
                                     <div class="form-group">
                                         <label>Username</label>
-                                        <input type="text" class="form-control" name="username"
-                                            value="<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>"
+                                        <input type="text" class="form-control" name="username" value=""
+                                            placeholder="<?php echo htmlspecialchars($_SESSION['username'] ?? ''); ?>"
                                             required>
                                     </div>
 
@@ -172,40 +176,49 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     </div>
                 </div>
 
-                <div class="card mt-4">
-                    <div class="card-body">
-                        <h5 class="card-title">Order History</h5>
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Order ID</th>
-                                    <th>Date</th>
-                                    <th>Status</th>
-                                    <th>Total</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#12345</td>
-                                    <td>2023-01-15</td>
-                                    <td>Shipped</td>
-                                    <td>$49.99</td>
-                                </tr>
-                                <tr>
-                                    <td>#12346</td>
-                                    <td>2023-01-20</td>
-                                    <td>Delivered</td>
-                                    <td>$29.99</td>
-                                </tr>
-                                <tr>
-                                    <td>#12347</td>
-                                    <td>2023-02-05</td>
-                                    <td>Processing</td>
-                                    <td>$19.99</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                <div class="col-md-8">
+                    <?php
+// Check if user is logged in
+if (!isset($_SESSION['user_id'])) {
+    echo "Please log in to view your cart.";
+    exit;
+}
+
+// Get userId from session
+$userId = $_SESSION['user_id'];
+
+// Fetch cart items for the logged-in user
+$stmt = $conn->prepare("SELECT Cart.CartId, Products.ProductName, Products.ProductPrice, Cart.Quantity 
+                        FROM Cart 
+                        JOIN Products ON Cart.ProductId = Products.ProductId
+                        WHERE Cart.UserId = ?");
+$stmt->execute([$userId]);
+
+$cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// If cart is empty
+if (empty($cartItems)) {
+    echo "Your cart is empty.";
+    exit;
+}
+
+// Display cart items
+foreach ($cartItems as $item) {
+    echo "<div class='cart-item'>";
+    echo "<h5>" . htmlspecialchars($item['ProductName']) . "</h5>";
+    echo "<p>Price: $" . number_format($item['ProductPrice'], 2) . "</p>";
+    echo "<p>Quantity: " . $item['Quantity'] . "</p>";
+    echo "<p>Total: $" . number_format($item['ProductPrice'] * $item['Quantity'], 2) . "</p>";
+    echo "</div>";
+}
+
+// Optionally, you can also calculate the total cart price
+$totalPrice = 0;
+foreach ($cartItems as $item) {
+    $totalPrice += $item['ProductPrice'] * $item['Quantity'];
+}
+echo "<p>Total Cart Price: $" . number_format($totalPrice, 2) . "</p>";
+?>
                 </div>
             </div>
         </div>
