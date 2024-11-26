@@ -113,14 +113,14 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
 
                     <div class="d-flex justify-content-center">
 
-                        <a class="btn btn-lg f-color " href="../login.php">
+                        <a class="btn btn-lg f-color " href="./login.php">
                             Login
                         </a>
                     </div>
                     <div class="d-flex justify-content-center">
 
                         <!-- Trigger Button for Modal -->
-                        <a class="btn btn-lg f-color" href="../register.php">
+                        <a class="btn btn-lg f-color" href="./register.php">
                             Sign Up
                         </a>
 
