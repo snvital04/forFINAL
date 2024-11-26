@@ -4,18 +4,17 @@ include __DIR__ . '/../db/dbcon.php'; // Include the database connection
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
-    echo "Please log in to add items to your cart.";
+    echo "Please log in to view your cart.";
     exit;
 }
 
 $userId = $_SESSION['user_id']; // Get the user ID from session
 
 // Handle the add-to-cart action
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['productId'])) {
     $productId = isset($_POST['productId']) ? (int)$_POST['productId'] : 0;
     $quantity = isset($_POST['quantity']) ? (int)$_POST['quantity'] : 1;
 
-    // Ensure the product ID and quantity are valid
     if ($productId <= 0 || $quantity <= 0) {
         echo "Invalid product or quantity.";
         exit;
@@ -50,6 +49,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+// Handle remove item from cart
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['removeCartId'])) {
+    $cartId = isset($_POST['removeCartId']) ? (int)$_POST['removeCartId'] : 0;
+
+    if ($cartId <= 0) {
+        echo "Invalid cart item.";
+        exit;
+    }
+
+    // Prepare the query to remove the item from the cart in the database
+    $stmt = $conn->prepare("DELETE FROM Cart WHERE CartId = ? AND UserId = ?");
+    $stmt->execute([$cartId, $userId]);
+
+    echo "Item removed from the cart.";  // Return success message
+    header("Location: addcart.php"); // Redirect to the cart page to refresh the cart view
+    exit;
+}
+
 // Fetch cart items for the logged-in user
 $stmtCart = $conn->prepare("SELECT c.CartId, c.Quantity, p.ProductName, p.ProductPrice, p.ProductImage FROM Cart c JOIN Products p ON c.ProductId = p.ProductId WHERE c.UserId = ?");
 $stmtCart->execute([$userId]);
@@ -74,8 +91,9 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC)['TotalPrice'];
 </head>
 
 <body>
-    <?php include 'header.php'; // Include your header that displays user details or navigation ?>
-
+    <?php 
+    include 'header.php'; // Assuming you have a header.php file for your page header
+    ?>
     <section class="bg-light py-5 my-5">
         <div class="container">
             <div class="row">
@@ -90,6 +108,7 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC)['TotalPrice'];
                                 foreach ($cartItems as $item) {
                                     $totalPrice = $item['Quantity'] * $item['ProductPrice']; // Calculate total price for each item
                                     echo '
+                                    <form method="post">
                                     <div class="row gy-3 mb-4" data-cart-id="' . $item['CartId'] . '">
                                         <div class="col-lg-5">
                                             <div class="me-lg-5">
@@ -109,12 +128,12 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC)['TotalPrice'];
                                             </div>
                                         </div>
                                         <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
-                                            <div class="float-md-end">
-                                                <a href="#!" class="btn btn-light border px-2 icon-hover-primary"><i class="fas fa-heart fa-lg px-1 text-secondary"></i></a>
-                                                <a href="#" class="btn btn-light border text-danger icon-hover-danger">Remove</a>
+                                            <div class="float-md-end">   
+                                                <button class="btn btn-light border text-danger" type="submit" name="removeCartId" value="' . $item['CartId'] . '">Remove</button>
                                             </div>
                                         </div>
-                                    </div>';
+                                    </div>
+                                    </form>';
                                 }
                             } else {
                                 echo "<p>Your cart is empty.</p>";
@@ -146,38 +165,10 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC)['TotalPrice'];
         </div>
     </section>
 
-    <script>
-    // Function to update the total price when quantity changes
-    document.querySelectorAll('.quantity-input').forEach(function(input) {
-        input.addEventListener('change', function() {
-            let quantity = parseInt(this.value);
-            let price = parseFloat(this.getAttribute('data-price'));
-            let cartId = this.getAttribute('data-cart-id');
-            let totalPrice = quantity * price;
-
-            // Update the total price for the item
-            this.closest('.row').querySelector('.total-price .h6').textContent = "$" + totalPrice
-                .toFixed(2);
-
-            // Update the total price in the summary
-            updateCartTotal();
-        });
-    });
-
-    // Function to update the total cart price
-    function updateCartTotal() {
-        let total = 0;
-        document.querySelectorAll('.total-price .h6').forEach(function(priceElement) {
-            total += parseFloat(priceElement.textContent.replace('$', ''));
-        });
-        document.getElementById('total-price').textContent = "$" + total.toFixed(2);
-    }
-    </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
     </script>
 
-    <script src="script.js"></script>
 </body>
 
 </html>
