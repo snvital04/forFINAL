@@ -14,3 +14,15 @@
                 }, false)
             })
     })();
+
+      // Function to show/hide fields based on selected role
+      document.getElementById("roleSelect").addEventListener("change", function() {
+        var selectedRole = this.value;
+
+        if (selectedRole == 5) { // Seller
+            document.getElementById("sellerFields").style.display = "block";
+        } else {
+            document.getElementById("registrationForm").style.display = "block";
+            document.getElementById("sellerFields").style.display = "none";
+        }
+    });

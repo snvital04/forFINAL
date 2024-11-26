@@ -19,125 +19,136 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
 </head>
 
 <body id="home" class=" bg-body-custom">
+    <?php
+include 'php/session.php';
+$user_id = isset($_SESSION['user_id']); // Store user ID in session
+$image_path = isset($_SESSION['image_path']); // Store user ID in session
+?>
 
-    <main class=" mt-4 ">
-        <?php
-    include 'include_php/carousel.php';
-    ?>
-        <header class="fixed-top shadow bg-custom">
-            <nav class="navbar navbar-expand-lg justify-content-center">
+    <header class="fixed-top shadow bg-custom">
+        <nav class="navbar navbar-expand-lg justify-content-center">
 
-                <div class="px-0 px-sm-5">
-                    <h1>
-                        <a class="navbar-brand " href="./index.php">
-                            <img src="images/icon/logo.jpg" class="img-fluid lazy entered loaded rounded-pill"
-                                data-ll-status="loaded" style="width:200px;" alt="Sobremesa Cafe/user Logo">
+            <div class="px-0 px-sm-5">
+                <h1>
+                    <a class="navbar-brand " href="./index.php">
+                        <img src="images/icon/logo.jpg" class="img-fluid lazy entered loaded rounded-pill"
+                            data-ll-status="loaded" style="width:200px;" alt="Sobremesa Cafe/user Logo">
+                    </a>
+                </h1>
+            </div>
+            <div class="collapse navbar-collapse" id="MainNav">
+                <ul class="navbar-nav mx-auto my-3 my-lg-0">
+
+                    <li class="nav-item px-4 fs-5 active">
+                        <a class="nav-link f-color" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item dropdown px-4 fs-5  active">
+                        <a class="nav-link dropdown-toggle f-color" href="#" id="navbarDropdown" role="button"
+                            data-bs-toggle="dropdown" aria-expanded="false">
+                            Categories
                         </a>
-                    </h1>
-                </div>
-                <div class="collapse navbar-collapse" id="MainNav">
-                    <ul class="navbar-nav mx-auto my-3 my-lg-0">
+                        <ul class="dropdown-menu f-color" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item f-color" href="#food">Foods</a></li>
+                            <li><a class="dropdown-item f-color" href="#Drinks">Drinks</a></li>
+                            <li><a class="dropdown-item f-color" href="#Cake">Cake</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
-                        <li class="nav-item px-4 fs-5 active">
-                            <a class="nav-link f-color" href="index.php">Home</a>
-                        </li>
-                        <li class="nav-item dropdown px-4 fs-5  active">
-                            <a class="nav-link dropdown-toggle f-color" href="#" id="navbarDropdown" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Categories
-                            </a>
-                            <ul class="dropdown-menu f-color" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item f-color" href="#food">Foods</a></li>
-                                <li><a class="dropdown-item f-color" href="#Coffee">Coffee</a></li>
-                                <li><a class="dropdown-item f-color" href="#Cake">Cake</a></li>
-                                <li>
-                                    <hr class="dropdown-divider">
-                                </li>
+                        </ul>
+                    </li>
 
-                            </ul>
-                        </li>
+                    <li class="nav-item px-4 fs-5">
+                        <a class="nav-link f-color" href="#About">About</a>
+                    </li>
 
-                        <li class="nav-item px-4 fs-5">
-                            <a class="nav-link f-color" href="#About">About</a>
-                        </li>
+                </ul>
+            </div>
 
-                    </ul>
-                </div>
+            <div class="ms-lg-auto text-right navbar-content d-none d-lg-block px-5 mx-5 f-color ">
+                <div class="d-flex ">
 
-                <div class="ms-lg-auto text-right navbar-content d-none d-lg-block px-5 mx-5 f-color ">
-                    <div class="d-flex ">
+                    <?php if ($user_id): ?>
+                    <a type="button" class="btn btn-lg rounded f-color" href="user/addcart.php">
+                        <img src="images/icon/cart.png" style="width:40px;height: 40px;" alt="Cart">
+                    </a>
+                    <div class="dropdown">
+                        <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <img src="php/image_upload/profile_pic.png" class=" img-thumbnail "
+                                style="cursor: pointer; width: 45px; height: 45px;backgroud-color:red ;">
+                            <?php echo htmlspecialchars($_SESSION['firstname'] ?? '') . ' ' . htmlspecialchars($_SESSION['lastname'] ?? ''); ?>
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="user/profile.php" class="dropdown-item btn btn-lg f-color ">
+                                    <?php if (!empty($image_path)): ?>
+                                    <!-- Display the profile picture -->
+                                    <img src="<?php echo htmlspecialchars($image_path); ?>"
+                                        class="rounded-circle border border-dark" alt="Profile Picture"
+                                        style="width: 35px; height: 35px;">
+                                    <?php else: ?>
+                                    <!-- Default profile image -->
+                                    <img src="images/icon/profile.png" class="rounded-circle border border-dark"
+                                        style="width: 35px; height: 35px;">
+                                    <?php endif; ?>
+                                    <?php echo htmlspecialchars($_SESSION['firstname'] ?? '') . ' ' . htmlspecialchars($_SESSION['lastname'] ?? ''); ?>
+                                </a>
+                            </li>
 
-                        <?php if ($user_id): ?>
-                        <a type="button" class="btn btn-lg rounded f-color" href="addcart.php">
-                            <img src="images/icon/cart.png" style="width:40px;height: 40px;" alt="Cart">
-                        </a>
-                        <div class="dropdown">
-                            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <img src="php/image_upload/profile_pic.png" class=" img-thumbnail "
-                                    style="cursor: pointer; width: 45px; height: 45px;backgroud-color:red ;">
-                                <?php echo htmlspecialchars($_SESSION['firstname'] ?? '') . ' ' . htmlspecialchars($_SESSION['lastname'] ?? ''); ?>
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li>
-                                    <a href="user/profile.php" class="dropdown-item btn btn-lg f-color ">
-                                        <?php if (!empty($image_path)): ?>
-                                        <!-- Display the profile picture -->
-                                        <img src="<?php echo htmlspecialchars($image_path); ?>"
-                                            class="rounded-circle border border-dark" alt="Profile Picture"
-                                            style="width: 35px; height: 35px;">
-                                        <?php else: ?>
-                                        <!-- Default profile image -->
-                                        <img src="images/icon/profile.png" class="rounded-circle border border-dark"
-                                            style="width: 35px; height: 35px;">
-                                        <?php endif; ?>
-                                        <?php echo htmlspecialchars($_SESSION['firstname'] ?? '') . ' ' . htmlspecialchars($_SESSION['lastname'] ?? ''); ?>
-                                    </a>
-                                </li>
-
-                                <li>
-                                    <a class="dropdown-item btn btn-lg f-color" href="./user/php/logout.php">
-                                        <img src="images/icon/logout.png" style="width: 25px;" alt="Logout"> Logout
-                                    </a>
-                                </li>
-                                <li>
-                                    <a class="dropdown-item" href="#">Something else here</a>
-                                </li>
-                            </ul>
-                        </div>
+                            <li>
+                                <a class="dropdown-item btn btn-lg f-color" href="./user/php/logout.php">
+                                    <img src="images/icon/logout.png" style="width: 25px;" alt="Logout"> Logout
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                            </li>
+                        </ul>
+                    </div>
 
 
-                        <?php else: ?>
-                        <a class="btn btn-lg f-color " href="./login.php">
+                    <?php else: ?>
+
+
+                    <div class="d-flex justify-content-center">
+
+                        <a class="btn btn-lg f-color " href="../login.php">
                             Login
                         </a>
-
-                        <div class="d-flex justify-content-center">
-
-                            <!-- Trigger Button for Modal -->
-                            <a class="btn btn-lg f-color" href="./register.php">
-                                Sign Up
-                            </a>
-
-                        </div><?php endif; ?>
                     </div>
-                </div>
+                    <div class="d-flex justify-content-center">
 
-            </nav>
-        </header>
-        <section class=" d-flex text-center flex-column px-5" id="Coffee">
+                        <!-- Trigger Button for Modal -->
+                        <a class="btn btn-lg f-color" href="../register.php">
+                            Sign Up
+                        </a>
+
+                    </div><?php endif; ?>
+                </div>
+            </div>
+
+        </nav>
+    </header>
+    <main class=" mt-4 ">
+        <?php
+       
+    include 'include_php/carousel.php';
+    ?>
+
+        <section class=" d-flex text-center flex-column px-5" id="Drinks">
             <h1 class="text-center bg-light f-color-blue py-1">Category</h1>
             <div class=" row bg-dark p-0 m-0 justify-content-center align-items-center">
                 <div class="col-md-6 d-flex justify-content-center align-items-center">
                     <div class="text-center">
                         <h1>
-                            <div class="display-2 text-white fw-bold">COFFEE</div>
+                            <div class="display-2 text-white fw-bold">Drinks</div>
                             <div class="display-5 text-white">Lorem, ipsum dolor.</div>
                         </h1>
                         <p class="lead my-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                         <div>
                             <?php if ($user_id): ?>
-                            <a href="coffee.php" class="btn btn-secondary hover-button">Shop Now</a>
+                            <a href="user/drinks.php" class="btn btn-secondary hover-button">Shop Now</a>
                             <?php else: ?>
                             <a href="./login.php" class="btn btn-secondary hover-button">Shop Now</a>
                             <?php endif; ?>
@@ -167,7 +178,7 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
                         <p class="lead my-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                         <div>
                             <?php if ($user_id): ?>
-                            <a href="food.php" class="btn btn-secondary hover-button">Shop Now</a>
+                            <a href="user/food.php" class="btn btn-secondary hover-button">Shop Now</a>
                             <?php else: ?>
                             <a href="./login.php" class="btn btn-secondary hover-button">Shop Now</a>
                             <?php endif; ?>
@@ -189,7 +200,7 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
                         <p class="lead my-4">Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
                         <div>
                             <?php if ($user_id): ?>
-                            <a href="cake.php" class="btn btn-secondary hover-button">Shop Now</a>
+                            <a href="user/cake.php" class="btn btn-secondary hover-button">Shop Now</a>
                             <?php else: ?>
                             <a href="./login.php" class="btn btn-secondary hover-button">Shop Now</a>
                             <?php endif; ?>

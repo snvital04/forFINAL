@@ -43,4 +43,53 @@ ALTER TABLE UserInfo ADD FOREIGN KEY (UserAccessId) REFERENCES UserAccess (UserA
 ALTER TABLE LookUp ADD FOREIGN KEY (CreatedByUserId) REFERENCES UserInfo (UserId);
 ALTER TABLE UserAccess ADD FOREIGN KEY (UserId) REFERENCES UserInfo (UserId);
 ALTER TABLE UserAccessPage ADD FOREIGN KEY (LookUpId) REFERENCES LookUp (LookUpId);
-ALTER TABLE UserAccessPage ADD FOREIGN KEY (UserId) REFERENCES UserInfo (UserId);          
+ALTER TABLE UserAccessPage ADD FOREIGN KEY (UserId) REFERENCES UserInfo (UserId);         
+
+-- cart
+
+CREATE TABLE IF NOT EXISTS Products (
+    ProductId INT AUTO_INCREMENT PRIMARY KEY,
+    ProductName VARCHAR(255) NOT NULL,
+    ProductDescription TEXT,
+    ProductPrice DECIMAL(10, 2) NOT NULL,
+    ProductImage VARCHAR(255),
+    ProductStock INT DEFAULT 0
+);
+CREATE TABLE IF NOT EXISTS Cart (
+    CartId INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT NOT NULL,
+    ProductId INT NOT NULL,
+    ProductName VARCHAR(255) NOT NULL,
+    ProductPrice DECIMAL(10, 2) NOT NULL,
+    Quantity INT DEFAULT 1,
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserId) REFERENCES Users(UserId) ON DELETE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE,
+    UNIQUE KEY UniqueCartItem (UserId, ProductId)
+);
+CREATE TABLE IF NOT EXISTS Orders (
+    OrderId INT AUTO_INCREMENT PRIMARY KEY,
+    UserId INT NOT NULL,
+    TotalPrice DECIMAL(10, 2) NOT NULL,
+    OrderStatus VARCHAR(50) DEFAULT 'pending',
+    CreatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (UserId) REFERENCES Users(UserId)
+);
+CREATE TABLE IF NOT EXISTS OrderDetails (
+    OrderDetailId INT AUTO_INCREMENT PRIMARY KEY,
+    OrderId INT NOT NULL,
+    ProductId INT NOT NULL,
+    ProductName VARCHAR(255) NOT NULL,
+    Quantity INT NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    FOREIGN KEY (OrderId) REFERENCES Orders(OrderId) ON DELETE CASCADE,
+    FOREIGN KEY (ProductId) REFERENCES Products(ProductId) ON DELETE CASCADE
+);
+-- seller
+INSERT INTO LookUp (LookUpName,LookUpCategory) VALUES ('male','gender'),('female','gender'), ('Food','ProductCategory'), ('Drinks','ProductCategory'), ('Cake','ProductCategory');
+
+-- Step 3: Alter Products table to add ProductCategory column
+ALTER TABLE Products
+    ADD COLUMN ProductCategory INT,
+    ADD CONSTRAINT fk_ProductCategory FOREIGN KEY (ProductCategory) 
+    REFERENCES LookUp(LookUpId)

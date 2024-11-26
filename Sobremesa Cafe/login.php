@@ -1,7 +1,7 @@
 <?php
-session_start(); // Ensure session is started
 
-include __DIR__ . '/db/dbcon.php';
+include 'user/php/session.php';
+include 'db/dbcon.php';
 
 $errors_pass = '';
 $errors_user = '';

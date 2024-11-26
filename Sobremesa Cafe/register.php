@@ -1,10 +1,12 @@
 <?php
-include 'user/php/session.php';
-
 include __DIR__ . '/db/dbcon.php';
-$error_message="";
-$error_password="";
+
+$error_message = "";
+$error_password = "";
+$success_message = "";
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Collect input values with trimming
     $firstName = isset($_POST['firstName']) ? trim($_POST['firstName']) : "";
     $lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : "";
     $birthdate = isset($_POST['birthdate']) ? trim($_POST['birthdate']) : "";
@@ -14,82 +16,77 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = isset($_POST['username']) ? trim($_POST['username']) : "";
     $password = isset($_POST['password']) ? trim($_POST['password']) : "";
     $confirmPassword = isset($_POST['confirmPassword']) ? trim($_POST['confirmPassword']) : "";
-    $terms = isset($_POST['terms']) ? trim($_POST['terms']) : "";
-    if($password!==$confirmPassword){
-        $error_password ="The password do not match";
-        $stmt = $conns->prepare("SELECT LookUpId FROM lookup WHERE LookUpId = ?");
-        $stmt->execute([$genderValue]);
 
-// If the gender value doesn't exist, you can either show an error or insert it
-if ($stmt->rowCount() == 0) {
-    // Gender value doesn't exist in lookup table
-    echo "Invalid gender value.";
-
-    }else{
-       
-    // Validate required fields
-        $stmtemail = $conn->prepare("SELECT * FROM Userinfo  WHERE EmailAddress = :email");
-        $stmtemail->bindParam(':email', $email);
-        $stmtemail->execute();
-
-        if ($stmtemail->rowCount() > 0) {
-            $error_message = "The email already exists.";
-        }else{
-            $stmtuser = $conn->prepare("SELECT * FROM UserAccess  WHERE username = :username;");
-            $stmtuser->bindParam(':username', $username);
-            $stmtuser->execute();
+    // Password mismatch check
+    if ($password !== $confirmPassword) {
+        $error_password = "The password does not match.";
+    } else {
+        // Check for valid gender
+        $stmt = $conn->prepare("SELECT LookUpId FROM lookup WHERE LookUpId = ?");
+        $stmt->execute([$gender]);
+        if ($stmt->rowCount() == 0) {
+            $error_message = "Invalid gender value.";
+        } else {
+            // Check if email already exists
+            $stmtemail = $conn->prepare("SELECT * FROM Userinfo WHERE EmailAddress = :email");
+            $stmtemail->bindParam(':email', $email);
+            $stmtemail->execute();
+            if ($stmtemail->rowCount() > 0) {
+                $error_message = "The email already exists.";
+            } else {
+                // Check if username already exists
+                $stmtuser = $conn->prepare("SELECT * FROM UserAccess WHERE username = :username");
+                $stmtuser->bindParam(':username', $username);
+                $stmtuser->execute();
                 if ($stmtuser->rowCount() > 0) {
                     $error_message = "The username already exists.";
-                }else{
-                     
+                } else {
+                    // Insert user information into Userinfo table
+                    $sql = "INSERT INTO Userinfo (FirstName, LastName, Birthdate, EmailAddress, PhoneNumber, Address, Gender, DateVerified, VerifiedUser) 
+                            VALUES (:firstName, :lastName, :birthdate, :email, :phone, '', :gender, NULL, 0)";
+                    $stmt = $conn->prepare($sql);
+                    $stmt->bindParam(':firstName', $firstName);
+                    $stmt->bindParam(':lastName', $lastName);
+                    $stmt->bindParam(':birthdate', $birthdate);
+                    $stmt->bindParam(':email', $email);
+                    $stmt->bindParam(':phone', $phone);
+                    $stmt->bindParam(':gender', $gender);
 
-                        // Prepare SQL query to insert user info into Userinfo table
-                        $sql = "INSERT INTO Userinfo (FirstName, LastName, Birthdate, EmailAddress, PhoneNumber, Address, Gender, DateVerified, VerifiedUser) 
-                                VALUES (:firstName, :lastName, :birthdate, :email, :phone, :address, :gender, NULL, 0)";
-                
-                        // Prepare statement for Userinfo table
-                        $stmt = $conn->prepare($sql);
-                        $stmt->bindParam(':firstName', $firstName);
-                        $stmt->bindParam(':lastName', $lastName);
-                        $stmt->bindParam(':birthdate', $birthdate);
-                        $stmt->bindParam(':email', $email);
-                        $stmt->bindParam(':phone', $phone);
-                        $stmt->bindParam(':address', $address); // Ensure address is handled (add address field to form)
-                        $stmt->bindParam(':gender', $gender);
-                
-                        if ($stmt->execute()) {
-                            $lastInsertId = $conn->lastInsertId();
-                            // Hash the password before saving it to the database
-                            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                    if ($stmt->execute()) {
+                        $lastInsertId = $conn->lastInsertId();
+                        // Hash the password before saving it to the database
+                        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-                            // Now insert the user credentials into UserAccess table
-                            $sqlAccess = "INSERT INTO UserAccess (UserId, Username, Password, Active, DateCreated)
-                                            VALUES (:userId, :username, :password, 1, NOW())";
-                
-                            $stmtAccess = $conn->prepare($sqlAccess);
-                            $stmtAccess->bindParam(':userId', $lastInsertId);
-                            $stmtAccess->bindParam(':username', $username);
-                            $stmtAccess->bindParam(':password', $hashedPassword);
-                
-                            if ($stmtAccess->execute()) {
-                                // Registration successful, redirect user
-                                $_SESSION['message'] = "Registration successful!";
-                                header("Location: login.php");
-                                exit;
-                            } else {
-                                $errors = "Error: Could not insert into UserAccess table.";
-                            }
+                        // Insert into UserAccess table
+                        $sqlAccess = "INSERT INTO UserAccess (UserId, Username, Password, Active, DateCreated)
+                                      VALUES (:userId, :username, :password, 1, NOW())";
+                        $stmtAccess = $conn->prepare($sqlAccess);
+                        $stmtAccess->bindParam(':userId', $lastInsertId);
+                        $stmtAccess->bindParam(':username', $username);
+                        $stmtAccess->bindParam(':password', $hashedPassword);
+
+                        if ($stmtAccess->execute()) {
+                            // Registration successful
+                            $success_message = "Registration successful!";
+                            // Redirect to login or another page after success (you may use header("Location: login.php"); here)
+                            exit;  // You may also redirect instead of exit, e.g., header("Location: login.php");
                         } else {
-                            $errors = "Error: Could not execute the query to insert into Userinfo.";
+                            $error_message = "Error: Could not insert into UserAccess table.";
                         }
-                        
+                    } else {
+                        $error_message = "Error: Could not execute the query to insert into Userinfo.";
                     }
-                    
-                    
-    }  
+                }
+            }
+        }
+    }
 }
-}
-}
+
+// If the gender value doesn't exist, you can either show an error or handle it further
+?>
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -135,28 +132,28 @@ if ($stmt->rowCount() == 0) {
                     <option value="4">Admin</option>
                     <option value="5">Seller</option>
                 </select>
+            </div> <!-- Dynamic fields for Seller role -->
+            <div id="sellerFields" style="display:none;">
+                <div class="mb-4 position-relative">
+                    <input type="text" required id="businessName" class="form-control" name="businessName"
+                        placeholder="Business Name" />
+                </div>
+                <div class="mb-4 position-relative">
+                    <input type="text" required id="businessLicense" class="form-control" name="businessLicense"
+                        placeholder="Business License Number" />
+                </div>
+                <div class="mb-4 position-relative">
+                    <textarea class="form-control" id="businessAddress" name="businessAddress"
+                        placeholder="Business Address"></textarea>
+                </div>
+                <div class="mb-4 position-relative">
+                    <input type="text" id="businessPhone" class="form-control" name="businessPhone"
+                        placeholder="Business Phone Number" />
+                </div>
             </div>
             <form method="post" id="registrationForm" class="p-3 rounded needs-validation" novalidate>
 
-                <!-- Dynamic fields for Seller role -->
-                <div id="sellerFields" style="display:none;">
-                    <div class="mb-4 position-relative">
-                        <input type="text" required id="businessName" class="form-control" name="businessName"
-                            placeholder="Business Name" />
-                    </div>
-                    <div class="mb-4 position-relative">
-                        <input type="text" required id="businessLicense" class="form-control" name="businessLicense"
-                            placeholder="Business License Number" />
-                    </div>
-                    <div class="mb-4 position-relative">
-                        <textarea class="form-control" id="businessAddress" name="businessAddress"
-                            placeholder="Business Address"></textarea>
-                    </div>
-                    <div class="mb-4 position-relative">
-                        <input type="text" id="businessPhone" class="form-control" name="businessPhone"
-                            placeholder="Business Phone Number" />
-                    </div>
-                </div>
+
 
                 <div class="row">
                     <div class="col-md-6 mb-3 position-relative">
@@ -233,7 +230,11 @@ if ($stmt->rowCount() == 0) {
                         <?php if (!empty($error_message)) { echo $error_message; } ?>
                     </small>
                 </div>
-
+                <div class="form-check d-flex justify-content-center text-center">
+                    <small class="text-success ">
+                        <?php if (!empty($success_message)) { echo $success_message; } ?>
+                    </small>
+                </div>
                 <div class="d-flex justify-content-center">
                     <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
                 </div>
@@ -253,22 +254,9 @@ if ($stmt->rowCount() == 0) {
 
         </div>
     </div>
-    <script src="user/js/register.js"></script>
+    <script src="js/register.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
-    </script>
-    <script>
-    // Function to show/hide fields based on selected role
-    document.getElementById("roleSelect").addEventListener("change", function() {
-        var selectedRole = this.value;
-
-        if (selectedRole == 5) { // Seller
-            document.getElementById("sellerFields").style.display = "block";
-        } else {
-            document.getElementById("registrationForm").style.display = "block";
-            document.getElementById("sellerFields").style.display = "none";
-        }
-    });
     </script>
 </body>
 

@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Foods</h1>
+                    <h1 class="display-4 fw-bolder">Drinks</h1>
                     <p class="lead fw-normal text-white-50 mb-0">With this shop homepage template</p>
                 </div>
             </div>
@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <!-- Fetch products from the database, filtering by ProductCategory = 3 (Food) -->
                 <?php
                 // Fetch products from the database where ProductCategory is 3 (Food)
-                $stmt = $conn->prepare("SELECT * FROM Products WHERE ProductCategory = 5");
+                $stmt = $conn->prepare("SELECT * FROM Products WHERE ProductCategory = 4");
                 $stmt->execute();
                 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
