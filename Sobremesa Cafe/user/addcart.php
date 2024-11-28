@@ -67,6 +67,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['removeCartId'])) {
     exit;
 }
 
+// Handle saving the updated quantity in the cart
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['saveCartId'])) {
+    $cartId = isset($_POST['saveCartId']) ? (int)$_POST['saveCartId'] : 0;
+    $newQuantity = isset($_POST['newQuantity']) ? (int)$_POST['newQuantity'] : 1;
+
+    if ($cartId <= 0) {
+        echo "Invalid cart item.";
+        exit;
+    }
+
+    // Update the quantity in the database
+    $stmtUpdate = $conn->prepare("UPDATE Cart SET Quantity = ? WHERE CartId = ? AND UserId = ?");
+    $stmtUpdate->execute([$newQuantity, $cartId, $userId]);
+
+    echo "Quantity updated.";
+    header("Location: addcart.php"); // Redirect to the cart page to refresh the cart view
+    exit;
+}
+
 // Fetch cart items for the logged-in user
 $stmtCart = $conn->prepare("SELECT c.CartId, c.Quantity, p.ProductName, p.ProductPrice, p.ProductImage FROM Cart c JOIN Products p ON c.ProductId = p.ProductId WHERE c.UserId = ?");
 $stmtCart->execute([$userId]);
@@ -108,7 +127,7 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC)['TotalPrice'];
                                 foreach ($cartItems as $item) {
                                     $totalPrice = $item['Quantity'] * $item['ProductPrice']; // Calculate total price for each item
                                     echo '
-                                    <form method="post">
+                                    <form method="post" class="cart-item-form">
                                     <div class="row gy-3 mb-4" data-cart-id="' . $item['CartId'] . '">
                                         <div class="col-lg-5">
                                             <div class="me-lg-5">
@@ -116,23 +135,29 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC)['TotalPrice'];
                                                     <img src="' . $item['ProductImage'] . '" class="border rounded me-3" style="width: 96px; height: 96px;" />
                                                     <div class="">
                                                         <a href="#" class="nav-link">' . $item['ProductName'] . '</a>
-                                                        <p class="text-muted">Quantity: <input type="number" class="quantity-input" value="' . $item['Quantity'] . '" min="1" data-price="' . $item['ProductPrice'] . '" data-cart-id="' . $item['CartId'] . '" style="width: 60px;" /></p>
+                                                        <p class="text-muted">Quantity: 
+                                                            <input type="number" class="quantity-input" value="' . $item['Quantity'] . '" min="1" data-price="' . $item['ProductPrice'] . '" data-cart-id="' . $item['CartId'] . '" style="width: 60px;" />
+                                                        </p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-lg-2 col-sm-6 col-6 d-flex flex-row flex-lg-column flex-xl-row text-nowrap">
                                             <div class="total-price">
-                                                <text class="h6">$' . number_format($totalPrice, 2) . '</text> <br />
+                                                <text class="h6 total-item-price">$' . number_format($totalPrice, 2) . '</text> <br />
                                                 <small class="text-muted text-nowrap"> $' . number_format($item['ProductPrice'], 2) . ' / per item </small>
                                             </div>
                                         </div>
                                         <div class="col-lg col-sm-6 d-flex justify-content-sm-center justify-content-md-start justify-content-lg-center justify-content-xl-end mb-2">
                                             <div class="float-md-end">   
+                                                <!-- Save Button -->
+                                                <button class="btn btn-light border text-success" type="submit" name="saveCartId" value="' . $item['CartId'] . '" disabled>Save</button>
+                                                <!-- Remove Button -->
                                                 <button class="btn btn-light border text-danger" type="submit" name="removeCartId" value="' . $item['CartId'] . '">Remove</button>
                                             </div>
                                         </div>
                                     </div>
+                                    <input type="hidden" name="newQuantity" value="' . $item['Quantity'] . '" class="new-quantity-input" />
                                     </form>';
                                 }
                             } else {
@@ -168,7 +193,30 @@ $total = $stmtTotal->fetch(PDO::FETCH_ASSOC)['TotalPrice'];
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous">
     </script>
+    <script>
+    // JavaScript to handle quantity change and update hidden input field for new quantity
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        const initialQuantity = input.value; // Store the initial quantity
 
+        input.addEventListener('change', function() {
+            const quantity = parseInt(this.value); // Get updated quantity
+            const cartId = this.getAttribute('data-cart-id'); // Get cart item ID
+            const form = this.closest('form'); // Find the closest form
+            const saveButton = form.querySelector(
+                'button[type="submit"][name="saveCartId"]'); // Get the save button
+
+            // Update hidden input field for new quantity
+            form.querySelector('.new-quantity-input').value = quantity;
+
+            // Disable save button if quantity is not changed
+            if (quantity === parseInt(initialQuantity)) {
+                saveButton.disabled = true; // Disable button if quantity is unchanged
+            } else {
+                saveButton.disabled = false; // Enable button if quantity is changed
+            }
+        });
+    });
+    </script>
 </body>
 
 </html>

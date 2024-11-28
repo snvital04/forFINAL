@@ -218,7 +218,7 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
 
     <!--ABOUT  -->
     <footer class="">
-
+        <?php echo htmlspecialchars($_SESSION['role'] ?? '') . ' ' . htmlspecialchars($_SESSION['role'] ?? ''); ?>
         <section id="About">
             <div id="footer-bottom">
                 <div class="container-fluid">

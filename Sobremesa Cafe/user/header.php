@@ -59,7 +59,7 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
                     </button>
                     <ul class="dropdown-menu">
                         <li>
-                            <a href="user/profile.php" class="dropdown-item btn btn-lg f-color ">
+                            <a href="profile.php" class="dropdown-item btn btn-lg f-color ">
                                 <?php if (!empty($image_path)): ?>
                                 <!-- Display the profile picture -->
                                 <img src="<?php echo htmlspecialchars($image_path); ?>"
@@ -75,7 +75,7 @@ $image_path = isset($_SESSION['image_path']); // Store user ID in session
                         </li>
 
                         <li>
-                            <a class="dropdown-item btn btn-lg f-color" href="./user/php/logout.php">
+                            <a class="dropdown-item btn btn-lg f-color" href="./php/logout.php">
                                 <img src="images/icon/logout.png" style="width: 25px;" alt="Logout"> Logout
                             </a>
                         </li>

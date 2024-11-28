@@ -12,23 +12,35 @@
 </head>
 
 <body id="home" class=" bg-body-custom">
-    <?php 
-    // if (isset($_SESSION['user_id'])) {
-    //     include 'user/index.php';
-    // }
-    // elseif (isset($_POST[' '])) {
-    //     include 'admin/index.php';
-    // }
-    // elseif (isset($_POST[' '])) {
-    //     include 'seller/index.php';
-    // }
-    // else{
-    //     include 'user/index.php';
-    // }
-?><?php 
+    <?php
+session_start(); // Start the session to access session variables
 
-    include 'user/index.php';
+// Check if session role is set
+if (isset($_SESSION['role'])) {
+    // Get the role from the session
+    $role = $_SESSION['role'];
+
+    // Redirect based on the role
+    if ($role == 6) {
+        // User role, redirect to user page
+        include 'user/index.php';
+    } elseif ($role == 7) {
+        // Seller role, redirect to seller page
+        include 'seller/index.php';
+    } elseif ($role == 8) {
+        // Admin role, redirect to admin page
+        include 'admin/index.php';
+    } else {
+        // Handle invalid or unexpected roles (optional)
+        echo "Unauthorized access or invalid role.";
+    }
+} else {
+    // If the session doesn't have a role set, you can redirect them to the login page
+    // or show a default page.
+    include 'user/index.php'; // Default page if no role is set
+}
 ?>
+
 </body>
 
 </html>

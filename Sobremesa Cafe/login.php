@@ -28,6 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['birthday'] = $user['Birthdate'];
             $_SESSION['address'] = $user['Address'];
             $_SESSION['verified'] = $user['VerifiedUser'];
+            $_SESSION['role'] = $user['Role'];
 
             // Redirect to the home page or dashboard
             header("Location: index.php");

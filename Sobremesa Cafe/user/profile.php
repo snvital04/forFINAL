@@ -177,48 +177,7 @@ include 'header.php';
                 </div>
 
                 <div class="col-md-8">
-                    <?php
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
-    echo "Please log in to view your cart.";
-    exit;
-}
 
-// Get userId from session
-$userId = $_SESSION['user_id'];
-
-// Fetch cart items for the logged-in user
-$stmt = $conn->prepare("SELECT Cart.CartId, Products.ProductName, Products.ProductPrice, Cart.Quantity 
-                        FROM Cart 
-                        JOIN Products ON Cart.ProductId = Products.ProductId
-                        WHERE Cart.UserId = ?");
-$stmt->execute([$userId]);
-
-$cartItems = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// If cart is empty
-if (empty($cartItems)) {
-    echo "Your cart is empty.";
-    exit;
-}
-
-// Display cart items
-foreach ($cartItems as $item) {
-    echo "<div class='cart-item'>";
-    echo "<h5>" . htmlspecialchars($item['ProductName']) . "</h5>";
-    echo "<p>Price: $" . number_format($item['ProductPrice'], 2) . "</p>";
-    echo "<p>Quantity: " . $item['Quantity'] . "</p>";
-    echo "<p>Total: $" . number_format($item['ProductPrice'] * $item['Quantity'], 2) . "</p>";
-    echo "</div>";
-}
-
-// Optionally, you can also calculate the total cart price
-$totalPrice = 0;
-foreach ($cartItems as $item) {
-    $totalPrice += $item['ProductPrice'] * $item['Quantity'];
-}
-echo "<p>Total Cart Price: $" . number_format($totalPrice, 2) . "</p>";
-?>
                 </div>
             </div>
         </div>

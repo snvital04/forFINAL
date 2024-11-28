@@ -1,7 +1,6 @@
 <?php
-include '../user/php/session.php';
-include '../db/dbcon.php'; // Include the database connection
 
+include __DIR__ . '/../db/dbcon.php'; // Include the database connection
 // Check if the user is logged in as a seller (you can adapt this for your login system)
 if (!isset($_SESSION['user_id'])) {
     echo "Please log in to access this page.";
